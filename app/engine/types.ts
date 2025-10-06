@@ -8,6 +8,7 @@ export type BodySnapshot = {
     label?: string;
     circleRadius?: number | null;
     bounds?: Matter.Bounds;
+    hp?: number;
 };
 
 
