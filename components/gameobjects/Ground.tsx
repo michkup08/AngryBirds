@@ -6,21 +6,14 @@ type Props = {
   y: number;
   w: number;
   h: number;
-  angle?: number;
 };
 
-export default function Block({ x, y, w, h, angle = 0 }: Props) {
+export default function Ground({ x, y, w, h }: Props) {
   const image = useImage(require("@/assets/images/box.png"));
   if (!image) return null;
 
   return (
-    <Group
-      transform={[
-        { translateX: x },
-        { translateY: y },
-        { rotate: angle },
-      ]}
-    >
+    <Group transform={[{ translateX: x }, { translateY: y }]}>
       <SkiaRect x={-w / 2} y={-h / 2} width={w} height={h}>
         <ImageShader
           image={image}

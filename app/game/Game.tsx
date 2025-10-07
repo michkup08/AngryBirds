@@ -2,7 +2,7 @@ import SlingshotGesture from '@/components/gesture/SlingshotGesture';
 import level1 from '@/levels/level1.json';
 import { Canvas } from '@shopify/react-native-skia';
 import React, { JSX, useEffect, useRef, useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, ImageBackground, StyleSheet, View } from 'react-native';
 import PhysicsEngine from '../engine/PhisicsEngine';
 import SkiaRenderer from '../engine/SkiaRenderer';
 import { BodySnapshot } from '../engine/types';
@@ -45,12 +45,32 @@ export default function GameScreen(): JSX.Element {
 
     return (
         <View style={{ flex: 1 }}>
-            <Canvas style={{ width, height }}>
-                <SkiaRenderer bodies={bodies} />
-            </Canvas>
-            {currentBird && physics.current && (
-                <SlingshotGesture birdId={currentBird} physics={physics.current} onDrag={setDragPos} />
-            )}
+            <ImageBackground
+                source={require('@/assets/images/background.jpg')}
+            >
+                <View style={styles.overlay}>
+                    <Canvas style={{ width, height }}>
+                        <SkiaRenderer bodies={bodies} />
+                    </Canvas>
+                    {currentBird && physics.current && (
+                        <SlingshotGesture birdId={currentBird} physics={physics.current} onDrag={setDragPos} />
+                    )}
+                </View>
+                
+            </ImageBackground>
+            
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    overlay: {
+        backgroundColor: "rgba(0,0,0,0.6)", // półprzezroczysta warstwa
+        padding: 20,
+        borderRadius: 10,
+    },
+});

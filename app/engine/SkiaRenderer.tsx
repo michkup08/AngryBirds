@@ -1,4 +1,8 @@
-import { Circle, Group, Rect } from '@shopify/react-native-skia';
+import Bird from '@/components/gameobjects/Bird';
+import Block from '@/components/gameobjects/Block';
+import Ground from '@/components/gameobjects/Ground';
+import Pig from '@/components/gameobjects/Pig';
+import { Group } from '@shopify/react-native-skia';
 import React from 'react';
 import { BodySnapshot } from './types';
 
@@ -7,50 +11,64 @@ type Props = {
 };
 
 export default function SkiaRenderer({ bodies }: Props) {
+  // useEffect(() => {
+    // console.log('Bodies updated:', bodies);
+  // }, [bodies]);
   return (
     <Group>
       {bodies.map((b) => {
         // jeśli ciało jest kołem (ptak lub świnia)
         if (b.circleRadius) {
-          const color =
-            b.label === 'bird'
-              ? 'brown'
-              : b.label === 'pig'
-              ? 'green'
-              : 'gray';
-          return (
-            <Circle
-              key={String(b.id)}
-              cx={b.position.x}
-              cy={b.position.y}
-              r={b.circleRadius}
-              color={color}
-            />
-          );
+          
+          if( b.label === 'Bird')
+          {
+            return (
+              <Bird
+                key={String(b.id)}
+                x={b.position.x}
+                y={b.position.y}
+                r={b.circleRadius}
+                // angle={b.angle}
+              />
+            );
+          } else //if (b.label === 'pig')
+          {
+            return (
+              <Pig
+                key={String(b.id)}
+                x={b.position.x}
+                y={b.position.y}
+                r={b.circleRadius}
+                angle={b.angle}
+              />
+            );
+          }
         }
 
         // jeśli ciało jest prostokątem (blok / podłoże)
         const w = (b as any).width ?? Math.max(1, b.bounds!.max.x - b.bounds!.min.x);
         const h = (b as any).height ?? Math.max(1, b.bounds!.max.y - b.bounds!.min.y);
-        const color = b.label === 'Ground' ? 'black' : 'gray';
+        if(b.label === 'Ground') {
+          return (
+            <Ground
+              key={String(b.id)}
+              x={b.position.x}
+              y={b.position.y}
+              w={w}
+              h={h}
+            />
+          )
+        }
 
         return (
-          <Group
+          <Block
             key={String(b.id)}
-            transform={[
-              { translateX: b.position.x },
-              { translateY: b.position.y },
-              { rotate: b.angle }, // obrót wokół środka
-            ]}
-          >
-            <Rect
-              x={-w / 2}
-              y={-h / 2}
-              width={w}
-              height={h}
-              color={color}
-            />
-          </Group>
+            x={b.position.x}
+            y={b.position.y}
+            w={w}
+            h={h}
+            angle={b.angle}
+          />
         );
       })}
     </Group>
